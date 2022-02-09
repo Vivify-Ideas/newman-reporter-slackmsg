@@ -229,7 +229,7 @@ function cleanErrorMessage(message, maxMessageSize) {
 
 
 // sends the message to slack via POST to webhook url
-async function send(url, message, token) {
+async function send(url, message, token, hasFailures) {
     const payload = {
         method: 'POST',
         url,
@@ -242,6 +242,9 @@ async function send(url, message, token) {
     let result;
     try {
         result = await axios(payload);
+        if (hasFailures) {
+            process.exit(1);
+        }
     } catch (e) {
         result = false;
         console.error(`Error in sending message to slack ${e}`);
